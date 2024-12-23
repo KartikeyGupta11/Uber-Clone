@@ -190,3 +190,104 @@ curl -X POST http://yourapi.com/users/login \
   - `password` (string): User's password (minimum 6 characters)
 
 - `token` (string): JWT Token
+
+# User Profile Endpoint Documentation
+
+## Endpoint
+
+`GET /users/profile`
+
+## Description
+
+This endpoint retrieves the authenticated user's profile information.
+
+## Request Headers
+
+- `Authorization` (string, required): The JWT token in the format `Bearer <token>`.
+
+## Response
+
+### Success Response
+
+- **Status Code**: `200 OK`
+- **Body**:
+  ```json
+  {
+    "fullname": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com"
+  }
+  ```
+
+### Error Responses
+
+- **Status Code**: `401 Unauthorized`
+  - **Reason**: Missing or invalid token.
+  - **Body**:
+    ```json
+    {
+      "message": "Unauthorized"
+    }
+    ```
+
+## Example Request
+
+```bash
+curl -X GET http://yourapi.com/users/profile \
+-H "Authorization: Bearer jwt_token_string"
+```
+
+# User Logout Endpoint Documentation
+
+## Endpoint
+
+`GET /users/logout`
+
+## Description
+
+This endpoint logs out the authenticated user by invalidating the JWT token.
+
+## Request Headers
+
+- `Authorization` (string, required): The JWT token in the format `Bearer <token>`.
+
+## Response
+
+### Success Response
+
+- **Status Code**: `200 OK`
+- **Body**:
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
+
+### Error Responses
+
+- **Status Code**: `401 Unauthorized`
+  - **Reason**: Missing or invalid token.
+  - **Body**:
+    ```json
+    {
+      "message": "Unauthorized"
+    }
+    ```
+
+## Example Request
+
+```bash
+curl -X GET http://yourapi.com/users/logout \
+-H "Authorization: Bearer jwt_token_string"
+```
+
+## Example Response
+
+- `user` (object):
+
+  - `fullname` (object).
+    - `firstName` (string): User's first name.
+    - `lastName` (string): User's last name.
+  - `email` (string): User's email address.
