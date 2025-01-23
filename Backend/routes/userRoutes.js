@@ -2,6 +2,7 @@ import express from 'express';
 import {body} from 'express-validator';
 import {registerUser, loginUser, getUserProfile, logoutUser} from '../controllers/userController.js';
 import {authUser} from '../middleware/authMiddleware.js';
+import { model } from 'mongoose';
 
 const router = express.Router();
 

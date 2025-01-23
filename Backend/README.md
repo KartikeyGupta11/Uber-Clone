@@ -291,3 +291,154 @@ curl -X GET http://yourapi.com/users/logout \
     - `firstName` (string): User's first name.
     - `lastName` (string): User's last name.
   - `email` (string): User's email address.
+
+# Captain Registration Endpoint Documentation
+
+## Endpoint
+
+`POST /captains/register`
+
+## Description
+
+This endpoint is used to register a new captain in the system.
+
+## Request Body
+
+The request body must be in JSON format and include the following fields:
+
+- `fullname` (object, required):
+  - `firstName` (string, required): The first name of the captain. Must be at least 3 characters long.
+  - `lastName` (string, optional): The last name of the captain.
+- `email` (string, required): The email address of the captain. Must be a valid email format.
+- `password` (string, required): The password for the captain. Must be at least 6 characters long.
+- `vehicle` (object, required):
+  - `model` (string, required): The model of the vehicle. Must be at least 3 characters long.
+  - `vehicleType` (string, required): The type of the vehicle. Must be one of `Sedan`, `HatchBack`, `SUV`, `Bike`, `Auto`.
+  - `plate` (string, required): The plate number of the vehicle. Must be at least 3 characters long.
+  - `color` (string, required): The color of the vehicle. Must be at least 3 characters long.
+  - `capacity` (number, required): The capacity of the vehicle. Must be at least 1.
+
+Example:
+
+```json
+{
+  "fullname": {
+    "firstName": "John",
+    "lastName": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "password": "securePassword123",
+  "vehicle": {
+    "model": "Toyota",
+    "vehicleType": "Sedan",
+    "plate": "ABC123",
+    "color": "Red",
+    "capacity": 4
+  }
+}
+```
+
+## Response
+
+### Success Response
+
+- **Status Code**: `201 Created`
+- **Body**:
+  ```json
+  {
+    "token": "jwt_token_string",
+    "captain": {
+      "fullname": {
+        "firstName": "John",
+        "lastName": "Doe"
+      },
+      "email": "john.doe@example.com",
+      "vehicle": {
+        "model": "Toyota",
+        "vehicleType": "Sedan",
+        "plate": "ABC123",
+        "color": "Red",
+        "capacity": 4
+      }
+    }
+  }
+  ```
+
+### Error Responses
+
+- **Status Code**: `400 Bad Request`
+
+  - **Reason**: Missing or invalid fields in the request body.
+  - **Body**:
+    ```json
+    {
+      "errors": [
+        {
+          "msg": "First Name must be of atleast 3 characters",
+          "param": "fullname.firstName"
+        },
+        {
+          "msg": "Invalid email format",
+          "param": "email"
+        }
+      ]
+    }
+    ```
+
+- **Status Code**: `409 Conflict`
+
+  - **Reason**: Email already exists.
+  - **Body**:
+    ```json
+    {
+      "message": "Captain already exists with this email"
+    }
+    ```
+
+- **Status Code**: `500 Internal Server Error`
+  - **Reason**: An unexpected error occurred on the server.
+  - **Body**:
+    ```json
+    {
+      "error": "Internal server error"
+    }
+    ```
+
+## Example Request
+
+```bash
+curl -X POST http://yourapi.com/captains/register \
+-H "Content-Type: application/json" \
+-d '{
+    "fullname": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "password": "securePassword123",
+    "vehicle": {
+      "model": "Toyota",
+      "vehicleType": "Sedan",
+      "plate": "ABC123",
+      "color": "Red",
+      "capacity": 4
+    }
+}'
+```
+
+### Example Response
+
+- `captain` (object):
+
+  - `fullname` (object):
+    - `firstName` (string): Captain's first name.
+    - `lastName` (string): Captain's last name.
+  - `email` (string): Captain's email address.
+  - `vehicle` (object):
+    - `model` (string): Vehicle model.
+    - `vehicleType` (string): Vehicle type.
+    - `plate` (string): Vehicle plate number.
+    - `color` (string): Vehicle color.
+    - `capacity` (number): Vehicle capacity.
+
+- `token` (string): JWT Token
