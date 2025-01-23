@@ -442,3 +442,207 @@ curl -X POST http://yourapi.com/captains/register \
     - `capacity` (number): Vehicle capacity.
 
 - `token` (string): JWT Token
+
+# Captain Login Endpoint Documentation
+
+## Endpoint
+
+`POST /captains/login`
+
+## Description
+
+This endpoint authenticates a captain and returns a JWT token for subsequent requests.
+
+## Request Body
+
+The request body must be in JSON format and include the following fields:
+
+```json
+{
+  "email": "john.doe@example.com", // string, required, valid email format
+  "password": "securePassword123" // string, required, minLength: 6
+}
+```
+
+## Response
+
+### Success Response
+
+- **Status Code**: `200 OK`
+- **Body**:
+  ```json
+  {
+    "token": "jwt_token_string",
+    "captain": {
+      "fullname": {
+        "firstName": "John",
+        "lastName": "Doe"
+      },
+      "email": "john.doe@example.com",
+      "vehicle": {
+        "model": "Toyota",
+        "vehicleType": "Sedan",
+        "plate": "ABC123",
+        "color": "Red",
+        "capacity": 4
+      }
+    }
+  }
+  ```
+
+### Error Responses
+
+- **Status Code**: `400 Bad Request`
+
+  - **Reason**: Missing or invalid fields in the request body.
+  - **Body**:
+    ```json
+    {
+      "errors": [
+        {
+          "msg": "Invalid email format",
+          "param": "email"
+        },
+        {
+          "msg": "Password must be of atleast 6 characters",
+          "param": "password"
+        }
+      ]
+    }
+    ```
+
+- **Status Code**: `401 Unauthorized`
+  - **Reason**: Invalid credentials.
+  - **Body**:
+    ```json
+    {
+      "message": "Invalid email or password"
+    }
+    ```
+
+## Example Request
+
+```bash
+curl -X POST http://yourapi.com/captains/login \
+-H "Content-Type: application/json" \
+-d '{
+    "email": "john.doe@example.com",
+    "password": "securePassword123"
+}'
+```
+
+### Example Response
+
+- `captain` (object):
+  - `fullname` (object):
+    - `firstName` (string): Captain's first name.
+    - `lastName` (string): Captain's last name.
+  - `email` (string): Captain's email address.
+  - `vehicle` (object):
+    - `model` (string): Vehicle model.
+    - `vehicleType` (string): Vehicle type.
+    - `plate` (string): Vehicle plate number.
+    - `color` (string): Vehicle color.
+    - `capacity` (number): Vehicle capacity.
+- `token` (string): JWT Token
+
+# Captain Profile Endpoint Documentation
+
+## Endpoint
+
+`GET /captains/profile`
+
+## Description
+
+This endpoint retrieves the authenticated captain's profile information.
+
+## Request Headers
+
+- `Authorization` (string, required): The JWT token in the format `Bearer <token>`.
+
+## Response
+
+### Success Response
+
+- **Status Code**: `200 OK`
+- **Body**:
+  ```json
+  {
+    "captain": {
+      "fullname": {
+        "firstName": "John",
+        "lastName": "Doe"
+      },
+      "email": "john.doe@example.com",
+      "vehicle": {
+        "model": "Toyota",
+        "vehicleType": "Sedan",
+        "plate": "ABC123",
+        "color": "Red",
+        "capacity": 4
+      }
+    }
+  }
+  ```
+
+### Error Responses
+
+- **Status Code**: `401 Unauthorized`
+  - **Reason**: Missing or invalid token.
+  - **Body**:
+    ```json
+    {
+      "message": "Unauthorized"
+    }
+    ```
+
+## Example Request
+
+```bash
+curl -X GET http://yourapi.com/captains/profile \
+-H "Authorization: Bearer jwt_token_string"
+```
+
+# Captain Logout Endpoint Documentation
+
+## Endpoint
+
+`GET /captains/logout`
+
+## Description
+
+This endpoint logs out the authenticated captain by invalidating the JWT token.
+
+## Request Headers
+
+- `Authorization` (string, required): The JWT token in the format `Bearer <token>`.
+
+## Response
+
+### Success Response
+
+- **Status Code**: `200 OK`
+- **Body**:
+  ```json
+  {
+    "message": "Logout Successfully"
+  }
+  ```
+
+### Error Responses
+
+- **Status Code**: `401 Unauthorized`
+  - **Reason**: Missing or invalid token.
+  - **Body**:
+    ```json
+    {
+      "message": "Unauthorized"
+    }
+    ```
+
+## Example Request
+
+```bash
+curl -X GET http://yourapi.com/captains/logout \
+-H "Authorization: Bearer jwt_token_string"
+```
